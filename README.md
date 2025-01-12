@@ -73,7 +73,7 @@ This project demonstrates the implementation of two microservices using Docker a
 
 1. Clone the repository:
    bash
-   git clone https://github.com/your-repo.git
+   git clone https://github.com/AbhisehkTripathi/laravel-microservice-kakfa.git
    cd your-repo
    
 
