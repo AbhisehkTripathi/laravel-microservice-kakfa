@@ -10,6 +10,9 @@ use Junges\Kafka\Message\Message;
 use Junges\Kafka\Contracts\KafkaConsumerMessage;
 use Illuminate\Support\Facades\Http;
 
+
+//Commenting
+
 class ProductController extends Controller
 {
     // Add a new product
