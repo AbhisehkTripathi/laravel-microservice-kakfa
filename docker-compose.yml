@@ -1,7 +1,7 @@
 version: '3.9'
 
 networks:
-  laravel-microservices_app_network:  # Define the shared network
+  laravel-microservices_app_network:
     driver: bridge
 
 services:
@@ -41,20 +41,44 @@ services:
       - APP_DEBUG=true
       - APP_KEY=base64:YOUR_APP_KEY
 
+  notifications:
+    build:
+      context: ./notifications
+      dockerfile: Dockerfile
+      args:
+        - APP_PORT=9002
+    container_name: notifications_service
+    ports:
+      - "9002:9002"
+    volumes:
+      - ./notifications:/var/www
+    networks:
+      - laravel-microservices_app_network
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - APP_KEY=base64:YOUR_APP_KEY
+    depends_on:
+      - auth
+      - products
+
   nginx:
     image: nginx:latest
     container_name: nginx_server
     ports:
       - "80:80"
+      - "443:443"
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro  # Custom Nginx configuration
-      - ./auth:/usr/share/nginx/html/auth:ro  # Auth service directory
-      - ./products:/usr/share/nginx/html/products:ro  # Products service directory
-      - ./services:/usr/share/nginx/html/services:ro  # Services service directory
-      - ./certs:/etc/nginx/certs:ro           # SSL certificates (if needed)
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./auth:/usr/share/nginx/html/auth:ro
+      - ./products:/usr/share/nginx/html/products:ro
+      - ./notifications:/usr/share/nginx/html/notifications:ro
+      - ./services:/usr/share/nginx/html/services:ro
+      - ./certs:/etc/nginx/certs:ro
     depends_on:
       - auth
       - products
+      - notifications
     networks:
       - laravel-microservices_app_network
     restart: unless-stopped
