@@ -9,4 +9,5 @@ interface ProductRepositoryInterface
     public function delete(int $id);
     public function all();
     public function find(int $id);
+    public function getLatest(int $count);
 }

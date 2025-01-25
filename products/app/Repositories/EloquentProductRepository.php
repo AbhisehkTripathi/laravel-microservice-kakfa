@@ -34,4 +34,11 @@ class EloquentProductRepository implements ProductRepositoryInterface
     {
         return Product::findOrFail($id);
     }
+
+    public function getLatest(int $count)
+    {
+        return Product::latest('created_at')
+            ->take($count)
+            ->get();
+    }
 }
