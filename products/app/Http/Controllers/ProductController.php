@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\BulkImportRequest;
 
 class ProductController extends Controller
 {
@@ -76,5 +77,26 @@ class ProductController extends Controller
         return response()->json([
             'products' => $products,
         ], 200);
+    }
+
+    // app/Http/Controllers/Api/ProductController.php
+    public function bulkImport(BulkImportRequest $request)
+    {
+        $file = $request->file('csv_file');
+
+        $result = $this->productService->bulkImportProducts($file);
+
+        if ($result['errors']) {
+            return response()->json([
+                'message' => 'Partial success with some errors',
+                'success_count' => $result['success_count'],
+                'errors' => $result['errors']
+            ], 207);
+        }
+
+        return response()->json([
+            'message' => 'Bulk import completed successfully',
+            'imported_count' => $result['success_count']
+        ], 201);
     }
 }

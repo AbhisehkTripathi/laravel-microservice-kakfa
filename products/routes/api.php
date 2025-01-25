@@ -10,5 +10,6 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/', [ProductController::class, 'listProducts']);
         Route::put('/{id}', [ProductController::class, 'updateProduct']);
         Route::delete('/{id}', [ProductController::class, 'deleteProduct']);
+        Route::post('/bulk-import', [ProductController::class, 'bulkImport']);
     });
 });
